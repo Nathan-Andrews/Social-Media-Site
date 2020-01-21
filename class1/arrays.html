@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <script>
+            const favoriteColors = ['red', 'green', 'blue'];
+            console.log(favoriteColors);
+
+            //removes last item
+            favoriteColors.pop();
+            console.log(favoriteColors);
+
+            const isGreenAFaveriteColor = favoriteColors.includes('Green');
+            console.log(isGreenAFaveriteColor);
+
+            let firstColor = favoriteColors[0];
+            console.log(firstColor);
+
+            firstColor = favoriteColors.slice(0,1);
+            console.log(firstColor);
+
+            const favoriteColorString = favoriteColors.join(', ');
+            console.log(favoriteColorString);
+        </script>
+    </head>
+</html>
