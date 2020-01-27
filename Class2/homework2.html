@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <script>
+            const animals =['dog', 'cat', 'zebra'];
+            
+            function addDog () {
+                animals.push('dog');
+                //console.log (animals);
+            };
+            function removeAnimal () {
+                const catArrayIndex = animals.indexOf('cat');
+                animals.splice(catArrayPos, 1,);
+                //console.log(animals);
+            };
+            function removeAnimalImmutable () {
+                const zebraRemoveIndex = animals.indexOf('zebra');
+                const anotherAnimalList = animals.slice(0, zebraRemoveIndex);
+                console.log(anotherAnimalList);
+                //console.log (zebraRemoveIndex);
+            };
+            function printAnimals () {
+                console.log (animals.join(" "));
+            };
+            function isAnimal (animalName) {
+                console.log(animals.includes(animalName));
+            };
+            function addDragon (animalAdd) {
+                let animals1 = animals.concat(animalAdd);
+                console.log(animals1);
+            };
+            
+            
+        </script>
+    </head> 
+    <body>
+        <h1>
+            Is “addDog” an example of “mutable” or “immutable” behavior on what happened to the “animals” argument? Please elaborate
+        </h1>
+        <p>
+            addDog is an example of mutable behavior because the array animals was added on to.
+        </p>
+        <h1>
+            Is “removeAnimal” an example of “mutable” or “immutable” behavior on what happened to the “animals” argument?
+        </h1>
+        <p>
+            in removeAnimal .indexOf() is an example of inmutable behavior because the value is not being changed it is just returning a number.  .splice is mutable because it changed the contents of animals.
+        </p>
+    </body>
+</html>

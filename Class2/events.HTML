@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <script>
+            function isCatInList (list) {
+                return list.includes('cat');
+            };
+            function init(){
+                console.log ('hi');
+                const nameElement = document.querySelector('#name');
+                const messageDiv = document.querySelector('#message');
+                //nameElement.value = 'hi';
+                nameElement.onkeyup = (event) => {
+                    //debugger
+                    const nameText = event.target.value;
+                    messageDiv.innerHTML = nameText;
+
+                    const animals = nameText.split(' ');
+                    console.log (animals);
+                    const isValid = isCatInList(animals);
+                    console.log (isValid);
+
+                }
+            };
+            window.onload = init;
+        </script>
+
+    </head>
+    <body>
+        Name: <input type="email" id="name" />
+        <div id="message"></div>
+        <div id="secret-message"></div>
+    </body>
+</html>
