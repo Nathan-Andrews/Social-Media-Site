@@ -133,7 +133,7 @@ class App extends React.Component {
           <LoginMessage errorMessage={this.state.errorMessage}/>
         </div>
       )
-    } else {
+    }else {
       return (
         <div>
           <Signup onUsernameChanged={this.onUsernameChanged} onPasswordChanged={this.onPasswordChanged} onFavoritePastryChanged={this.onFavoritePastryChanged} onSubmit={this.onSubmit} errorMessage={this.state.errorMessage}/>
@@ -145,9 +145,9 @@ class App extends React.Component {
 
   render() {
     
-    if (localStorage.loginSucess === true) {
+    if (this.state.loginSucess === true) {
       return (
-        <UserContent username={localStorage.username} logout={this.logout} favoritePastry={localStorage.favoritePastry}/>
+        <UserContent username={this.state.username} logout={this.logout} favoritePastry={this.state.favoritePastry}/>
       );
     } else {
       return(
