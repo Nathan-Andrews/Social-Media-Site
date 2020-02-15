@@ -54,6 +54,9 @@ class App extends React.Component {
       credidentalsScene: 'login',
       buttonText: 'sign up',
     });
+    delete localStorage.loginSuccess;
+    delete localStorage.username;
+    delete localStorage.favoritePastry;
   }
 
   onSubmit = () => {
@@ -70,7 +73,8 @@ class App extends React.Component {
           errorMessage: '',
           favoritePastry: foundUser.favoritePastry,
         });
-        this.onLoginSucess();
+        //console.log(foundUser.favoritePastry);
+        this.onLoginSucess(foundUser.favoritePastry);
       } else {
         this.setState ({
           errorMessage: 'Incorrect username or password'
@@ -82,10 +86,6 @@ class App extends React.Component {
     
     if(this.state.credidentalsScene === 'signup') {
       if (this.state.username && this.state.password && this.state.favoritePastry) {
-        console.log('it works...i think')
-        console.log(this.state.username)
-        console.log(this.state.password)
-        console.log(this.state.favoritePastry)
         const allUsers = this.state.users.concat({username, password, favoritePastry});
         localStorage.users = JSON.stringify (allUsers);
         this.setState({
@@ -93,7 +93,7 @@ class App extends React.Component {
           loginSucess: true,
           errorMessage: '',
         });
-        this.onLoginSucess();
+        this.onLoginSucess(this.state.favoritePastry);
       } else {
         this.setState({
           errorMessage:'Please fill in all the required information!'
@@ -115,15 +115,16 @@ class App extends React.Component {
         buttonText: 'sign up'
       });
     };
-    //console.log(this.state.credidentalsScene);
+    this.setState ({
+      errorMessage:''
+    });
   };
 
-  onLoginSucess = () => {
-    localStorage.password = this.state.password;
+  onLoginSucess = (favePastrySave) => {
     localStorage.username = this.state.username;
-    localStorage.favoritePastry= this.state.favoritePastry;
+    localStorage.favoritePastry= favePastrySave;
     localStorage.loginSuccess = true;
-  }
+  };
 
   renderSignin = () => {
     if (this.state.credidentalsScene === 'login') {
@@ -145,9 +146,9 @@ class App extends React.Component {
 
   render() {
     
-    if (this.state.loginSucess === true) {
+    if (localStorage.loginSuccess) {
       return (
-        <UserContent username={this.state.username} logout={this.logout} favoritePastry={this.state.favoritePastry}/>
+        <UserContent username={localStorage.username} logout={this.logout} favoritePastry={localStorage.favoritePastry}/>
       );
     } else {
       return(
