@@ -11,7 +11,7 @@ function UserList(props) {
                 {props.userList.map(user => (
                     <li key = {user.username} 
                     className="list-group-item">{user.username} {user.shortDescription}
-                        <button type = "button" onClick={() => props.startMessage(user.username, user._id)}>Send Message</button>
+                        <button type = "button" style = {{float: 'right'}} className = "btn btn-primary" onClick={() => props.startMessage(user.username, user._id)}>Send Message</button>
                 </li>))}
             </ul>
         </div>
