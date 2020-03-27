@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import UserList from './userList'
 import ComposeMessage from './ComposeMessage'
 import FromMessages from './FromMessages'
+import Error from './Error'
 
 function Member (props) {
     if (!props.user) {
@@ -16,6 +17,7 @@ function Member (props) {
                     <div className="col-md-auto">
                         <div>
                             hello {props.user.username}
+                            <Error sentMessage = {props.sentMessage}/>
                             <button onClick = {props.logout} className="btn btn-primary">logout</button>
                             <UserList userList = {props.userList} startMessage = {props.startMessage}/>
                             <FromMessages user = {props.user}/>

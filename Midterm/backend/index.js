@@ -28,7 +28,6 @@ MongoClient.connect(url, { useUnifiedTopology: true }, function(err,client) {
     const messagesCollection = db.collection('messages');
 
     app.post('/login', (req,res) => {
-        //const {username, password} = req.body
         userCollection.find({username : req.body.username}).toArray((err, result) => {
             const user = result[0]
 
@@ -64,30 +63,13 @@ MongoClient.connect(url, { useUnifiedTopology: true }, function(err,client) {
         })
     });
     app.get('/messages', (req,res) => {
-        /*const {username} = req.query
-        //console.log(username);
-        userCollection.find({username : username}).toArray((err, result) => {
-            const message = result.toMessage
-            if (err) {
-                res.status(400)
-                console.log(err)
-                return
-            }
-            if (!message) {
-                res.status(200)
-                res.json('no messages')
-                return
-            }
-            //console.log(message.user.toMessage)
-        })*/
+
     });
     app.get('/loggedInUser', (req,res) => {
-        //console.log(req.query.username);
         const username = req.query.username
         const password = req.query.password
         userCollection.find({username : username}).toArray((err, result) => {
             const user = result[0]
-            //console.log(user)
             if (!user) {
                 res.json({})
                 return
@@ -103,8 +85,6 @@ MongoClient.connect(url, { useUnifiedTopology: true }, function(err,client) {
     });
     app.post('/message', (req,res) => {
         const {username, password, _id, messageText} = req.body
-        //console.log(messageText)
-        console.log(_id)
         userCollection.find({username : username}).toArray((err, result) => {
             const user = result[0]
             if (!user) {
@@ -112,10 +92,7 @@ MongoClient.connect(url, { useUnifiedTopology: true }, function(err,client) {
                 return
             }
             if (username === user.username && password === user.password) {
-                userCollection.updateOne({_id: ObjectID(_id)}, {$push: {fromMessage: {messageText, _id}}}, (err, results) => {
-                    console.log(err)
-                    console.log(results)
-                })
+                userCollection.updateOne({_id: ObjectID(_id)}, {$push: {fromMessage: {messageText, _id}}})
                 userCollection.updateOne({username: username}, {$push: {toMessage: {messageText, _id}}})
 
                 res.status(200)
@@ -132,13 +109,11 @@ MongoClient.connect(url, { useUnifiedTopology: true }, function(err,client) {
             res.json({error:'user is a required query peramiter'});
             return;
         }
-        //console.log(req.query)
         userCollection.find({username:{$ne:req.query.user}}, {projection:{username:1, shortDescription:1}}).toArray((err, result) => {
             const users = result
             if(!err) {
                 res.status(200)
                 res.json({users: users})
-                //console.log(users)
             }else {
                 res.status(400)
                 res.json({error:err})

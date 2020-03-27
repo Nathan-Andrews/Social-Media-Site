@@ -48,7 +48,7 @@ class App extends React.Component {
       newMessage: null,
       message:'',
       toUser:'',
-      //messageText:''
+      sentMessage:'',
     }
     let user = [];
     if (localStorage.user) {
@@ -127,7 +127,7 @@ class App extends React.Component {
             user: res.data,
             scene: 'userContent'
           });
-          getUsers(res.data.username).then((res) => {
+          getUsers(this.state.user.username).then((res) => {
             this.setState({
               userList:res.data.users
             })
@@ -137,11 +137,6 @@ class App extends React.Component {
         }).catch((err) => {
           this.setState({
             error: 'username or email taken',
-          })
-        })
-        getUsers(this.state.user.username).then((res) => {
-          this.setState({
-            userList:res.data.users
           })
         })
       }
@@ -158,14 +153,15 @@ class App extends React.Component {
     if (username && password) {
       this.setState({
         login: login,
-        error:'',
       })
       loginUser(login).then((res) => {
         localStorage.user = JSON.stringify (this.state.login)
         console.log('you logged in! yay')
+        console.log(res.data)
         this.setState({
           user: login,
           scene: 'userContent',
+          error:'',
         })
         getUsers(login.username).then((res) => {
           this.setState({
@@ -195,11 +191,12 @@ class App extends React.Component {
       message({username, password, _id, messageText}).then((res) => {
         console.log('message sent!')
         console.log(res.data)
-        if (res.data === 'sucess') {
+        if (res.data === 'sent') {
           console.log(res.data)
           this.setState({
             newMessage:null,
             toUser:null,
+            sentMessage:'true',
           })
         }
       }).catch((err) => {
@@ -216,6 +213,8 @@ class App extends React.Component {
       user:null,
       login:'',
       error:'',
+      username:'',
+      password:'',
     })
     delete localStorage.user
   }
@@ -255,7 +254,7 @@ class App extends React.Component {
     if (this.state.scene === 'userContent' && this.state.user) {
       return (
         <div>
-          <Member user = {this.state.user} logout = {this.logout} userList = {this.state.userList} newMessage = {this.state.newMessage} onMessageChanged = {this.onMessageChanged} toUser = {this.state.toUser} startMessage = {this.startMessage} cancel = {this.cancel} onSend = {this.onSend}/>
+          <Member user = {this.state.user} logout = {this.logout} userList = {this.state.userList} newMessage = {this.state.newMessage} onMessageChanged = {this.onMessageChanged} toUser = {this.state.toUser} startMessage = {this.startMessage} cancel = {this.cancel} onSend = {this.onSend} sentMessage = {this.state.sentMessage}/>
         </div>
       );
     }

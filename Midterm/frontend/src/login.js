@@ -1,5 +1,6 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
+import Error from './Error'
 
 function Login (props) {
     return (
@@ -15,7 +16,7 @@ function Login (props) {
                             password: <input type = 'password' onChange = {props.onPasswordChanged}/>
                         </div>
                         <button type="button" onClick = {props.onLogin} className="btn btn-primary">login</button>
-                        <div className="alert alert-danger" role="alert">{props.error}</div>
+                        <Error error = {props.error}/>
                         <p>create an account:<button type="button" onClick = {props.switchScene} className="btn btn-primary">Sign Up</button></p>
                     </div>
                 </div>
