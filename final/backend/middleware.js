@@ -1,4 +1,5 @@
 const db = require('./db').connection
+const User = require('./model/users')
 
 const validateUser = (req, res, next) => {
     if (!req.cookies.sessionId) {
@@ -8,8 +9,7 @@ const validateUser = (req, res, next) => {
         return
     }
     console.log(req.cookies.sessionId)
-    db.users.find({sessionId:req.cookie.sessionId}).exec().then(
-        foundUser => {
+    User.findOne({sessionId:req.cookies.sessionId}).exec().then(foundUser => {
             //console.log(err, foundUser)
             req.user=foundUser;
             next()

@@ -6,15 +6,22 @@ import { Switch, BrowserRouter, Route, Link, Router } from "react-router-dom";
 
 import SignUp from './SignUp'
 import Login from './login'
+import Friends from './friends'
 
 function createUser(signUp) {
-  return axios.post('http://localhost:1928/signup', signUp);
+  return axios.post('http://localhost:1928/signup', signUp, {withCredentials:true});
 };
 function loginUser(user) {
-  return axios.post('http://localhost:1928/login', user);
+  return axios.post('http://localhost:1928/login', user, {withCredentials:true});
 };
 function validateUser() {
-  return axios.get('http://localhost:1928/loggedInUser')
+  return axios.get('http://localhost:1928/loggedInUser', {withCredentials:true})
+}
+function logoutUser() {
+  return axios.post('http://localhost:1928/logout', {withCredentials:true})
+}
+function getUsers() {
+  return axios.get('http://localhost:1928/users', {withCredentials:true})
 }
 
 class App extends React.Component{
@@ -28,13 +35,23 @@ class App extends React.Component{
       description:'',
       error:'',
       signUp:{},
+      user:'1',
+      try:null,
     }
   }
 
   componentDidMount(){
     validateUser().then((res) => {
       console.log(res.data)
-    }).catch(console.log('catch'))
+      this.setState({
+        user:res.data.user,
+      })
+    }).catch(err => {
+      console.log(err)
+      this.setState({
+        user:null
+      })
+    })
   }
   
   onUsernameChange = (event) => {
@@ -124,6 +141,14 @@ class App extends React.Component{
       )
     }
   }
+  logout = () => {
+    const username = this.state.user.username
+    logoutUser().then((res) => {
+      console.log(res.data)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
   render(){
     return(
@@ -135,6 +160,9 @@ class App extends React.Component{
             </Route>
             <Route path="/login">
               <Login onEmailChange={this.onEmailChange} onPasswordChange={this.onPasswordChange} login={this.login} error={this.state.error}/>
+            </Route>
+            <Route path='/friends'>
+              <Friends user={this.state.user} logout={this.logout}/>
             </Route>
           </Switch>
         </div>

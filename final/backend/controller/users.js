@@ -38,26 +38,44 @@ const signup = (req,res) => {
     })
 }
 const login = (req,res) => {
-    console.log(req.body)
     const {email, password} = req.body
     const userCollection = db.collection('users');
     const newPassword = md5(password)
+    const sessionId = createUUID();
     if (!req.body) {
         res.status(400)
         res.send('no request found')
         return
-    } else {
-        userCollection.find({email : email}).toArray((err, result) => {
-            const user = result[0]
-            if(user && email === user.email && newPassword === user.password) {
-                res.status(200)
-                res.json({user: user})
-            }else {
-                res.status(400)
-                res.json({error:"incorrect creditials"})
-            }
-        })
     }
+    userCollection.findOne({email : email}).then((user) => {
+        console.log(user.save)
+        if (!user || newPassword !== user.password) {
+            res.status(400)
+            res.json({error:"incorrect creditials"})
+            return
+        }
+        user.sessionId = sessionId
+        userCollection.update({_id: user._id}, {$set: { sessionId }}).then(() => {
+            res.cookie('sessionId', sessionId)
+            res.status(200)
+            res.json({user: user})
+        })
+    }).catch((err) => {
+        console.error(err)
+        res.status(400)
+        res.json({error:"incorrect creditials"})
+    })
+    
 }
 
-module.exports = {signup, login}
+const sendValidatedUser = (req, res) => {
+    console.log(req.user)
+    res.json({user: req.user})
+}
+
+const logoutUser = (req,res) => {
+    console.log(req.user)
+    res.json({user:req.user})
+}
+
+module.exports = {signup, login, sendValidatedUser, logoutUser}

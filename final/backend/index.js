@@ -10,6 +10,8 @@ const {port, mongouri} = config
 const userController = require('./controller/users')
 const signup = userController.signup;
 const login = userController.login
+const sendValidatedUser = userController.sendValidatedUser
+//const logoutUser = userController.logoutUser
 const validateUser = require('./middleware')
 
 const whitelist = ['http://localhost:3000', '*']
@@ -31,12 +33,12 @@ app.use(bodyParser.json())
 
 
 app.post('/login', login);
-//app.post('/api/logout');
+//app.post('/logout', validateUser, logoutUser);
 app.post('/signup', signup);
 //app.get('/messages');
-app.get('/loggedInUser', validateUser);
+app.get('/loggedInUser', validateUser, sendValidatedUser);
 //app.post('/message');
-//app.get('/users');
+app.get('/users', validateUser);
 //app.post('/addFriend');
 app.get('/feed/:userId', (req,res) => {
     res.send(req.params.userId)
