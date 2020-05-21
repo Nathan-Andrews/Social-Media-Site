@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios'
-import { Switch, BrowserRouter, Route, Link, Router } from "react-router-dom";
+import { Switch, BrowserRouter, Route, Link, Router} from "react-router-dom";
 
 import SignUp from './SignUp'
 import Login from './login'
@@ -35,8 +35,8 @@ class App extends React.Component{
       description:'',
       error:'',
       signUp:{},
-      user:'1',
-      try:null,
+      user: null,
+      isLoaded: false,
     }
   }
 
@@ -45,15 +45,17 @@ class App extends React.Component{
       console.log(res.data)
       this.setState({
         user:res.data.user,
+        isLoaded:true
       })
     }).catch(err => {
       console.log(err)
       this.setState({
-        user:null
+        user:null,
+        isLoaded:true
       })
     })
   }
-  
+
   onUsernameChange = (event) => {
     this.setState({
       username:event.target.value,
@@ -157,6 +159,13 @@ class App extends React.Component{
   }
 
   render(){
+    if (!this.state.isLoaded) {
+      return (
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      )
+    }
     return(
       <BrowserRouter>
         <div>
@@ -165,7 +174,7 @@ class App extends React.Component{
               <SignUp onUsernameChange={this.onUsernameChange} onEmailChange={this.onEmailChange} onPasswordChange={this.onPasswordChange} onConfirmPasswordChange={this.onConfirmPasswordChange} onBioChange={this.onBioChange} register={this.register} error={this.state.error}/>
             </Route>
             <Route path="/login">
-              <Login onEmailChange={this.onEmailChange} onPasswordChange={this.onPasswordChange} login={this.login} error={this.state.error}/>
+              <Login onEmailChange={this.onEmailChange} onPasswordChange={this.onPasswordChange} login={this.login} error={this.state.error} user={this.state.user}/>
             </Route>
             <Route path='/friends'>
               <Friends user={this.state.user} logout={this.logout}/>
