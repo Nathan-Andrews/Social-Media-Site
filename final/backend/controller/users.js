@@ -69,13 +69,23 @@ const login = (req,res) => {
 }
 
 const sendValidatedUser = (req, res) => {
-    console.log(req.user)
     res.json({user: req.user})
 }
 
 const logoutUser = (req,res) => {
-    console.log(req.user)
-    res.json({user:req.user})
+    const userCollection = db.collection('users');
+    if (!req.user) {
+        res.status(400)
+        res.json({error:"no cookie found"})
+        return
+    }
+    userCollection.updateOne({_id: req.user._id}, {$set: { sessionId:null }}).then(() => {
+        res.cookie('sessionId', null)
+        res.json({msg:'deleated cookie'})
+    }).catch((err) => {
+        res.json({error:err})
+    })
+
 }
 
 module.exports = {signup, login, sendValidatedUser, logoutUser}

@@ -11,6 +11,7 @@ const userController = require('./controller/users')
 const signup = userController.signup;
 const login = userController.login
 const sendValidatedUser = userController.sendValidatedUser
+const logoutUser = userController.logoutUser
 //const logoutUser = userController.logoutUser
 const validateUser = require('./middleware')
 
@@ -33,7 +34,7 @@ app.use(bodyParser.json())
 
 
 app.post('/login', login);
-//app.post('/logout', validateUser, logoutUser);
+app.get('/logout', validateUser, logoutUser);
 app.post('/signup', signup);
 //app.get('/messages');
 app.get('/loggedInUser', validateUser, sendValidatedUser);

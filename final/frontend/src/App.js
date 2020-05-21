@@ -18,7 +18,7 @@ function validateUser() {
   return axios.get('http://localhost:1928/loggedInUser', {withCredentials:true})
 }
 function logoutUser() {
-  return axios.post('http://localhost:1928/logout', {withCredentials:true})
+  return axios.get('http://localhost:1928/logout', {withCredentials:true})
 }
 function getUsers() {
   return axios.get('http://localhost:1928/users', {withCredentials:true})
@@ -142,11 +142,17 @@ class App extends React.Component{
     }
   }
   logout = () => {
-    const username = this.state.user.username
     logoutUser().then((res) => {
       console.log(res.data)
+      this.setState({
+        error:null,
+        user:null,
+      })
     }).catch(err => {
       console.log(err)
+      this.setState({
+        user:null
+      })
     })
   }
 
