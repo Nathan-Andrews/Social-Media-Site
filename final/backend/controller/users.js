@@ -87,5 +87,33 @@ const logoutUser = (req,res) => {
     })
 
 }
+const getFriends = (req,res) => {
+    if (!req.user) {
+        res.status(400)
+        res.json({error:"no cookie found"})
+        return
+    }
+    User.find({username:{$ne:req.user.username}},{username:1, description:1}).then(allUsers => {
+        res.status(200)
+        res.json(allUsers)
+    })
+}
+const addFriend = (req,res) => {
+    if (!req.user) {
+        res.status(400)
+        res.json({error:"no cookie found"})
+    }
+    const friends = req.user.friends
+    const userCollection=db.collection('users')
+    friends.push('friend1')
+    userCollection.updateOne({_id: req.user._id},{$set: {friends:friends}}).then(() => {
+        res.status(200)
+        res.json('updated friends')
+    }).catch(err => {
+        res.status(400)
+        res.json(err)
+    })
 
-module.exports = {signup, login, sendValidatedUser, logoutUser}
+}
+
+module.exports = {signup, login, sendValidatedUser, logoutUser, getFriends, addFriend}

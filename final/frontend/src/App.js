@@ -23,6 +23,9 @@ function logoutUser() {
 function getUsers() {
   return axios.get('http://localhost:1928/users', {withCredentials:true})
 }
+function addFriend(friend) {
+  return axios.post('http://localhost:1928/addFriend', friend, {withCredentials:true})
+}
 
 class App extends React.Component{
   constructor(){
@@ -37,15 +40,27 @@ class App extends React.Component{
       signUp:{},
       user: null,
       isLoaded: false,
+      users: null,
     }
   }
 
   componentDidMount(){
     validateUser().then((res) => {
-      console.log(res.data)
+      //console.log(res.data)
       this.setState({
         user:res.data.user,
-        isLoaded:true
+      })
+      getUsers().then((res) => {
+        //console.log(res.data)
+        this.setState({
+          users:res.data,
+          isLoaded:true
+        })
+      }).catch(err => {
+        console.log('error')
+        this.setState({
+          isLoaded:true
+        })
       })
     }).catch(err => {
       console.log(err)
@@ -157,6 +172,12 @@ class App extends React.Component{
       })
     })
   }
+  addFriend = (username) => {
+    console.log(`added friend ${username}`)
+    addFriend(username).then((res) => {
+      console.log(res.data)
+    })
+  }
 
   render(){
     if (!this.state.isLoaded) {
@@ -177,7 +198,7 @@ class App extends React.Component{
               <Login onEmailChange={this.onEmailChange} onPasswordChange={this.onPasswordChange} login={this.login} error={this.state.error} user={this.state.user}/>
             </Route>
             <Route path='/friends'>
-              <Friends user={this.state.user} logout={this.logout}/>
+              <Friends user={this.state.user} logout={this.logout} users={this.state.users} addFriend={this.addFriend}/>
             </Route>
           </Switch>
         </div>

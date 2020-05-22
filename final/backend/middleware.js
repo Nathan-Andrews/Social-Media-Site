@@ -10,7 +10,6 @@ const validateUser = (req, res, next) => {
     }
     console.log(req.cookies.sessionId)
     User.findOne({sessionId:req.cookies.sessionId}).exec().then(foundUser => {
-            //console.log(err, foundUser)
             req.user=foundUser;
             next()
             return

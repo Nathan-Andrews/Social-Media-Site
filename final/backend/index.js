@@ -12,6 +12,8 @@ const signup = userController.signup;
 const login = userController.login
 const sendValidatedUser = userController.sendValidatedUser
 const logoutUser = userController.logoutUser
+const getFriends = userController.getFriends
+const addFriend = userController.addFriend
 //const logoutUser = userController.logoutUser
 const validateUser = require('./middleware')
 
@@ -39,8 +41,8 @@ app.post('/signup', signup);
 //app.get('/messages');
 app.get('/loggedInUser', validateUser, sendValidatedUser);
 //app.post('/message');
-app.get('/users', validateUser);
-//app.post('/addFriend');
+app.get('/users', validateUser, getFriends);
+app.post('/addFriend', validateUser, addFriend);
 app.get('/feed/:userId', (req,res) => {
     res.send(req.params.userId)
 })
