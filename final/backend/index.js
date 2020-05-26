@@ -30,10 +30,10 @@ const corsOptions = {
   //origin: '*',
   credentials:true
 }
+
+app.use(bodyParser.json())
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(bodyParser.json())
-
 
 app.post('/login', login);
 app.get('/logout', validateUser, logoutUser);

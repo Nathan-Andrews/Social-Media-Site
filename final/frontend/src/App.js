@@ -172,9 +172,9 @@ class App extends React.Component{
       })
     })
   }
-  addFriend = (username) => {
-    console.log(`added friend ${username}`)
-    addFriend(username).then((res) => {
+  addFriend = (userId) => {
+    console.log(`added friend ${userId}`)
+    addFriend({userId}).then((res) => {
       console.log(res.data)
     })
   }

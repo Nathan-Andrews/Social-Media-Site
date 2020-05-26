@@ -28,7 +28,7 @@ function UserList (props) {
                                 <h4><b>{user.username}</b> {user.description}</h4>
                             </div>
                             <div className="col-sm-4">
-                                <button className="btn btn-primary" onClick={props.addFriend}>add as friend</button>
+                                <button className="btn btn-primary" onClick={() => {props.addFriend(user._id)}}>add as friend</button>
                             </div>
                         </div>
                     </li>
