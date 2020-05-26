@@ -3,6 +3,7 @@ const User = require('../model/users')
 const md5 = require('md5');
 const db = require('../db').connection
 const userCollection = require('../model/users')
+const ObjectId = require('mongodb').ObjectID;
 
 const createUUID = () => {
     return uuidv4()
@@ -109,21 +110,30 @@ const addFriend = (req,res) => {
     console.log(req.body)
     friends.push(req.body.userId)
     console.log(userCollection)
-    userCollection.updateOne({_id: req.user._id},{$set: {friends:req.body.userId}}).then(() => {
+    userCollection.updateOne({_id: req.user._id},{$set: {friends:ObjectId(req.body.userId)}}).then(() => {
         //res.status(200)
         //res.json('updated friends')
         console.log(`user Id ${req.body.userId}`)
         userCollection.find({_id:req.body.userId}).exec().then((user) => {
             console.log(`user:${user}`)
             console.log(`friend ${user.friends}`)
-            const friends2 = [user.friends]
-            friends2.push(req.user._id)
-            console.log(friends2)
-            userCollection.updateOne({_id: req.body.userId},{$set: {friends:friends2}}).then(() => {
-                console.log('successful')
-                res.status(200)
-                res.json('added friend')
-            })
+            if (user.friends) {
+                const friends2 = [user.friends]
+                friends2.push(req.user._id)
+                userCollection.updateOne({_id: req.body.userId},{$set: {friends:friends2}}).then(() => {
+                    console.log('successful')
+                    res.status(200)
+                    res.json('added friend')
+                })
+            } else {
+                const friends2 = [req.user._id]
+                console.log(friends2)
+                userCollection.updateOne({_id: req.body.userId},{$set: {friends:friends2}}).then(() => {
+                    console.log('successful')
+                    res.status(200)
+                    res.json('added friend')
+                })
+            }
         }).catch(err => {
             console.log(`error ${err}`)
         })
