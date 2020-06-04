@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Switch, BrowserRouter, Route, Link, Router, Redirect} from "react-router-dom";
 import UserList from './UserList'
+import FriendList from './friendList'
 
 function Friends (props) {
     if (!props.user) {
@@ -21,7 +22,8 @@ function Friends (props) {
                 </nav>
                 <a className="btn btn-outline-primary" onClick={props.logout}>Logout</a>
             </div>
-            <UserList user={props.user} users={props.users} addFriend={props.addFriend}/>
+            <FriendList friends={props.friends}/>
+            <UserList user={props.user} users={props.users} addFriend={props.addFriend} friends={props.friends}/>
         </div>
     )
 }

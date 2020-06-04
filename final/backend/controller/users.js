@@ -89,15 +89,35 @@ const logoutUser = (req,res) => {
     })
 
 }
+const groupUsersByRelationshipStatus = (users, friendIds) => {
+    const friends = users.filter((user) => {
+        if (friendIds.includes(user._id)) {
+            return true
+        }
+        return false
+    })
+    const notFriends = users.filter((user) => {
+        if (friendIds.includes(user._id)) {
+            return false
+        }
+        return true
+    })
+    return {friends,notFriends}
+}
 const getFriends = (req,res) => {
     if (!req.user) {
         res.status(400)
         res.json({error:"no cookie found"})
         return
     }
-    User.find({username:{$ne:req.user.username}},{username:1, description:1}).then(allUsers => {
-        res.status(200)
-        res.json(allUsers)
+    User.find({username:{$ne:req.user.username}},{username:1, description:1}).then(userList => {
+        console.log(req.user.friends,userList)
+        const {friends,notFriends} = groupUsersByRelationshipStatus(userList, req.user.friends)
+        res.json({friends,notFriends})
+    }).catch(err => {
+        res.status(400)
+        console.log(err)
+        res.json({error:err.message})
     })
 }
 const addFriend = (req,res) => {
@@ -124,6 +144,9 @@ const addFriend = (req,res) => {
                     console.log('successful')
                     res.status(200)
                     res.json('added friend')
+                }).catch(err => {
+                    res.status(400)
+                    res.json({error:err})
                 })
             } else {
                 const friends2 = [req.user._id]
@@ -132,15 +155,20 @@ const addFriend = (req,res) => {
                     console.log('successful')
                     res.status(200)
                     res.json('added friend')
+                }).catch(err => {
+                    res.status(400)
+                    res.json({error:err})
                 })
             }
         }).catch(err => {
             console.log(`error ${err}`)
+            res.status(400)
+            res.json({error:err})
         })
     }).catch(err => {
         console.log(err)
         res.status(400)
-        res.json(err)
+        res.json({error:err})
     })
 }
 

@@ -41,6 +41,7 @@ class App extends React.Component{
       user: null,
       isLoaded: false,
       users: null,
+      friends: null,
     }
   }
 
@@ -51,9 +52,10 @@ class App extends React.Component{
         user:res.data.user,
       })
       getUsers().then((res) => {
-        //console.log(res.data)
+        console.log(res.data.notFriends)
         this.setState({
-          users:res.data,
+          users:res.data.notFriends,
+          friends:res.data.friends,
           isLoaded:true
         })
       }).catch(err => {
@@ -198,7 +200,7 @@ class App extends React.Component{
               <Login onEmailChange={this.onEmailChange} onPasswordChange={this.onPasswordChange} login={this.login} error={this.state.error} user={this.state.user}/>
             </Route>
             <Route path='/friends'>
-              <Friends user={this.state.user} logout={this.logout} users={this.state.users} addFriend={this.addFriend}/>
+              <Friends user={this.state.user} logout={this.logout} users={this.state.users} addFriend={this.addFriend} friends={this.state.friends}/>
             </Route>
           </Switch>
         </div>
