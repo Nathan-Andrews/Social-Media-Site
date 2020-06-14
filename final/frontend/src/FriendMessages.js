@@ -26,19 +26,21 @@ function FriendMessages (props) {
         return null
     }
 
-    const USER_RECIPIENT_COLOR = '111111'
-    const USER_SENDER_COLOR = '66FFFF';
+    const USER_RECIPIENT_COLOR = '#D6D6D6'
+    const USER_SENDER_COLOR = '#66FFFF';
 
     function MessageListItem(props) {
         const {userId, message} = props;
         console.log(message.body)
-        const color = props.sender === userId ? USER_SENDER_COLOR : USER_RECIPIENT_COLOR
-        return <li style={{background: color}}>{message.body}</li>
+        console.log(message.sender)
+        const color = message.sender === userId ? USER_SENDER_COLOR : USER_RECIPIENT_COLOR
+        return <div style={{background: color}}>{message.body}</div>
     }
 
     function MessageList(props) {
         const {userId, messages2} = props;
         console.log(props.messages2)
+        console.log(userId)
         // Note that a key should be used here
         return (
             <ul>{messages2[0].messages.map((message) => MessageListItem({message, userId}))}</ul>
@@ -70,7 +72,7 @@ function FriendMessages (props) {
             </div>
 
             <div className="container">
-                <MessageList messages2={messages}/>
+                <MessageList messages2={messages} userId={userId}/>
                 <div className="text-center">
                     
                 </div>
