@@ -1,12 +1,12 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import axios from 'axios'
-import { Switch, BrowserRouter, Route, Link, Router} from "react-router-dom";
+import { Switch, BrowserRouter, Route} from "react-router-dom";
 
 import SignUp from './SignUp'
 import Login from './login'
 import Friends from './friends'
+import FriendMessages from './FriendMessages'
 
 function createUser(signUp) {
   return axios.post('http://localhost:1928/signup', signUp, {withCredentials:true});
@@ -26,6 +26,9 @@ function getUsers() {
 function addFriend(friend) {
   return axios.post('http://localhost:1928/addFriend', friend, {withCredentials:true})
 }
+function message(contents) {
+  return axios.post('http://localhost:1928/message', contents, {withCredentials:true})
+}
 
 class App extends React.Component{
   constructor(){
@@ -42,6 +45,7 @@ class App extends React.Component{
       isLoaded: false,
       users: null,
       friends: null,
+      message:'',
     }
   }
 
@@ -59,7 +63,7 @@ class App extends React.Component{
           isLoaded:true
         })
       }).catch(err => {
-        console.log('error')
+        console.log(err)
         this.setState({
           isLoaded:true
         })
@@ -102,6 +106,12 @@ class App extends React.Component{
       description:event.target.value,
     })
     //console.log(this.state.description)
+  }
+  onMessageChange = (event) => {
+    this.setState({
+      message:event.target.value
+    })
+    //console.log(this.state.message)
   }
 
   register = () => {
@@ -180,6 +190,21 @@ class App extends React.Component{
       console.log(res.data)
     })
   }
+  send = (userId) => {
+    const friends = this.state.friends
+    function isCorrectFriend(friends) { 
+      return friends._id === userId;
+    }
+    const friend = friends.find(isCorrectFriend)
+    if (this.state.message) {
+      console.log(`sent ${this.state.message}`)
+      message({message:this.state.message,friend:friend._id}).then(() => {
+        this.setState({
+          message:''
+        })
+      })
+    }
+  }
 
   render(){
     if (!this.state.isLoaded) {
@@ -201,6 +226,9 @@ class App extends React.Component{
             </Route>
             <Route path='/friends'>
               <Friends user={this.state.user} logout={this.logout} users={this.state.users} addFriend={this.addFriend} friends={this.state.friends}/>
+            </Route>
+            <Route path='/messages/:userId'>
+              <FriendMessages onMessageChange={this.onMessageChange} send={this.send} friends={this.state.friends} message={this.state.message} logout={this.logout}/>
             </Route>
           </Switch>
         </div>

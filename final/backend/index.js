@@ -14,6 +14,9 @@ const sendValidatedUser = userController.sendValidatedUser
 const logoutUser = userController.logoutUser
 const getFriends = userController.getFriends
 const addFriend = userController.addFriend
+const messagesController = require('./controller/messages')
+const getMessages = messagesController.getMessages
+const sendMessage = messagesController.sendMessage
 //const logoutUser = userController.logoutUser
 const validateUser = require('./middleware')
 
@@ -38,13 +41,13 @@ app.use(cookieParser());
 app.post('/login', login);
 app.get('/logout', validateUser, logoutUser);
 app.post('/signup', signup);
-//app.get('/messages');
+app.get('/messages/:userId', validateUser, getMessages);
 app.get('/loggedInUser', validateUser, sendValidatedUser);
-//app.post('/message');
+app.post('/message', validateUser, sendMessage);
 app.get('/users', validateUser, getFriends);
 app.post('/addFriend', validateUser, addFriend);
 app.get('/feed/:userId', (req,res) => {
-    res.send(req.params.userId)
+  res.send(req.params.userId)
 })
 
 app.use(express.static('*'))

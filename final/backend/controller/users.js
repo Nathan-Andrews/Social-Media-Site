@@ -22,11 +22,11 @@ const signup = (req,res) => {
       const sessionId = createUUID();
       const newPassword = md5(password)
       const user = new User({
-          username: username,
-          email: email,
-          password: newPassword,
-          description:description,
-          sessionId
+        username: username,
+        email: email,
+        password: newPassword,
+        description:description,
+        sessionId
       });
       user.save(function (err, user) {
           if (err) {

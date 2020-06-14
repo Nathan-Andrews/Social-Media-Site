@@ -1,5 +1,8 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
+import {
+    Link
+  } from "react-router-dom";
 
 function FriendList (props) {
     if (!props.friends) {
@@ -18,7 +21,7 @@ function FriendList (props) {
                                 <h4><b>{user.username}</b> {user.description}</h4>
                             </div>
                             <div className="col-sm-4">
-                                <button className="btn btn-primary">message</button>
+                                <Link to={`/messages/${user._id}`} className="btn btn-primary">message</Link>
                                 <button className="btn btn-primary">feed</button>
                             </div>
                         </div>

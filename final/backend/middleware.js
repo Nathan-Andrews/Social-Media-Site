@@ -8,7 +8,7 @@ const validateUser = (req, res, next) => {
         next()
         return
     }
-    console.log(req.cookies.sessionId)
+    //console.log(req.cookies.sessionId)
     User.findOne({sessionId:req.cookies.sessionId}).exec().then(foundUser => {
             req.user=foundUser;
             next()
