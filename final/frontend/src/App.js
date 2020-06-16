@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import axios from 'axios'
-import { Switch, BrowserRouter, Route} from "react-router-dom";
+import { Switch, BrowserRouter, Route, Redirect} from "react-router-dom";
 
 import SignUp from './SignUp'
 import Login from './login'
@@ -228,7 +228,7 @@ class App extends React.Component{
               <Friends user={this.state.user} logout={this.logout} users={this.state.users} addFriend={this.addFriend} friends={this.state.friends}/>
             </Route>
             <Route path='/messages/:userId'>
-              <FriendMessages onMessageChange={this.onMessageChange} send={this.send} friends={this.state.friends} message={this.state.message} logout={this.logout}/>
+              <FriendMessages onMessageChange={this.onMessageChange} user={this.state.user} send={this.send} friends={this.state.friends} message={this.state.message} logout={this.logout}/>
             </Route>
           </Switch>
         </div>

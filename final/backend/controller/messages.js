@@ -34,28 +34,34 @@ const sendMessage = (req,res) => {
                 recipient: friendId,
                 sender: id,
                 body:message,
+                dateSent:new Date()
             })
             messagesCollection.updateOne({users:{$all: [friendId,id]}}, {$set:{messages:newMessages}}).then(()=> {
-                res.status(200)
-                res.json({message:'updated messages'})
-            return
+                console.log('test1')
+                //res.status(200)
+                //res.json({message:'updated messages'})
+                return
             }).catch(err => {
+                console.log('test2')
                 console.log(err)
                 res.status(400)
                 res.json({error:err.message})
+                return
             })
-            
+            return
         }
         const messageObj = new messagesCollection({
             users:[id, friendId],
             messages: [{
                 recipient:friendId,
                 sender:id,
-                body:message
+                body:message,
+                dateSent:new Date()
             }]
         })
         messageObj.save(function (err, user) {
             if (err) {
+                console.log('test3')
                 console.log(err)
                 res.status(400)
                 res.send(err)
@@ -65,9 +71,11 @@ const sendMessage = (req,res) => {
             res.send('success')
         })
     }).catch(err => {
+        console.log('test5')
         console.log('error',err)
         res.status(400)
         res.send(err)
+        return
     })
 }
 
