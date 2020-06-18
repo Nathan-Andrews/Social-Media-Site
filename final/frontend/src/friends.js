@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Switch, BrowserRouter, Route, Link, Router, Redirect} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 import UserList from './UserList'
 import FriendList from './friendList'
 
@@ -10,7 +10,10 @@ function Friends (props) {
         return (
             <Redirect to="/login"/>
         )
-    } 
+    }
+    if(!props.users) {
+        window.location.reload(false);
+    }
     return(
         <div>
             <div className="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
@@ -18,7 +21,7 @@ function Friends (props) {
                 <nav className="my-2 my-md-0 mr-md-3">
                     <a className="p-2 text-dark" href="#">My Feed</a>
                     <a className="p-2 text-dark" href="#">Messages</a>
-                    <a className="p-2 text-dark" href="#">Friends</a>
+                    <a className="p-2 text-dark" href="/friends">Friends</a>
                 </nav>
                 <a className="btn btn-outline-primary" onClick={props.logout}>Logout</a>
             </div>

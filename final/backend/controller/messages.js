@@ -8,7 +8,7 @@ const getMessages = (req, res) => {
     const fromUser = mongoose.Types.ObjectId(req.params.userId);
     const userArray = [currentUser, fromUser]
     console.log(userArray)
-    messagesCollection.find({users:{$all:userArray}}, {messages:1}).then(messages => {
+    messagesCollection.findOne({users:{$all:userArray}}, {messages:1}).then(messages => {
         //console.log(messages)
         res.json({messages:messages})
     }).catch(err => {
@@ -28,18 +28,19 @@ const sendMessage = (req,res) => {
     const friendId = mongoose.Types.ObjectId(friend);
 
     messagesCollection.findOne({users:{$all: [friendId, id]}}).then((messages) => {
+        const messageItem = {
+            recipient:friendId,
+            sender:id,
+            body:message,
+            dateSent:new Date()
+        }
         if (messages) {
             const newMessages = messages.messages
-            newMessages.push({
-                recipient: friendId,
-                sender: id,
-                body:message,
-                dateSent:new Date()
-            })
+            newMessages.push(messageItem)
             messagesCollection.updateOne({users:{$all: [friendId,id]}}, {$set:{messages:newMessages}}).then(()=> {
                 console.log('test1')
-                //res.status(200)
-                //res.json({message:'updated messages'})
+                res.status(200)
+                res.json({message:messageItem})
                 return
             }).catch(err => {
                 console.log('test2')
@@ -52,12 +53,7 @@ const sendMessage = (req,res) => {
         }
         const messageObj = new messagesCollection({
             users:[id, friendId],
-            messages: [{
-                recipient:friendId,
-                sender:id,
-                body:message,
-                dateSent:new Date()
-            }]
+            messages: [messageItem]
         })
         messageObj.save(function (err, user) {
             if (err) {
@@ -68,7 +64,7 @@ const sendMessage = (req,res) => {
                 return
             }
             res.status(200)
-            res.send('success')
+            res.json({message:messageItem})
         })
     }).catch(err => {
         console.log('test5')

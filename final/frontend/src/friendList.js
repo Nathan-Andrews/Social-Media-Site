@@ -21,8 +21,7 @@ function FriendList (props) {
                                 <h4><b>{user.username}</b> {user.description}</h4>
                             </div>
                             <div className="col-sm-4">
-                                <Link to={`/messages/${user._id}`} className="btn btn-primary">message</Link>
-                                <button className="btn btn-primary">feed</button>
+                                <Link to={`/messages/${user._id}`} className="btn btn-primary">feed</Link>
                             </div>
                         </div>
                     </li>
