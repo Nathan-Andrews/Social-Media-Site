@@ -4,12 +4,11 @@ const User = require('./model/users')
 const validateUser = (req, res, next) => {
     if (!req.cookies.sessionId) {
         console.log('failure')
-        console.log(req.cookies)
         next()
         return
     }
-    //console.log(req.cookies.sessionId)
     User.findOne({sessionId:req.cookies.sessionId}).exec().then(foundUser => {
+        console.log({foundUser})
             req.user=foundUser;
             next()
             return

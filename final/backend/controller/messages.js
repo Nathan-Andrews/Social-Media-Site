@@ -2,14 +2,10 @@ const mongoose = require('mongoose');
 const messagesCollection = require('../model/messages')
 
 const getMessages = (req, res) => {
-    //console.log(req.params)
-    //console.log('req.user', req.user)
     const currentUser = req.user._id
     const fromUser = mongoose.Types.ObjectId(req.params.userId);
     const userArray = [currentUser, fromUser]
-    console.log(userArray)
     messagesCollection.findOne({users:{$all:userArray}}, {messages:1}).then(messages => {
-        //console.log(messages)
         res.json({messages:messages})
     }).catch(err => {
         res.status(400)
@@ -38,12 +34,10 @@ const sendMessage = (req,res) => {
             const newMessages = messages.messages
             newMessages.push(messageItem)
             messagesCollection.updateOne({users:{$all: [friendId,id]}}, {$set:{messages:newMessages}}).then(()=> {
-                console.log('test1')
                 res.status(200)
                 res.json({message:messageItem})
                 return
             }).catch(err => {
-                console.log('test2')
                 console.log(err)
                 res.status(400)
                 res.json({error:err.message})
@@ -57,7 +51,6 @@ const sendMessage = (req,res) => {
         })
         messageObj.save(function (err, user) {
             if (err) {
-                console.log('test3')
                 console.log(err)
                 res.status(400)
                 res.send(err)
@@ -67,7 +60,6 @@ const sendMessage = (req,res) => {
             res.json({message:messageItem})
         })
     }).catch(err => {
-        console.log('test5')
         console.log('error',err)
         res.status(400)
         res.send(err)

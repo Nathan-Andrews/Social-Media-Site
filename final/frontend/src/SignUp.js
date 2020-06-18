@@ -1,9 +1,15 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './signup.css'
-import { Switch, BrowserRouter, Route, Link, Router } from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 
 function SignUp (props) {
+    if (props.user) {
+        console.log('qrebgikuh  ouhfk')
+        return (
+            <Redirect to="/friends"/>
+        )
+    } 
     return (
         <div>
             <div className="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">

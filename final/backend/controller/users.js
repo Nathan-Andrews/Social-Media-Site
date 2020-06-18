@@ -111,7 +111,6 @@ const getFriends = (req,res) => {
         return
     }
     User.find({username:{$ne:req.user.username}},{username:1, description:1}).then(userList => {
-        console.log(req.user.friends,userList)
         const {friends,notFriends} = groupUsersByRelationshipStatus(userList, req.user.friends)
         res.json({friends,notFriends})
     }).catch(err => {
@@ -127,21 +126,15 @@ const addFriend = (req,res) => {
     }
     const friends = [req.user.friends]
     //const userCollection=db.collection('users')
-    console.log(req.body)
     friends.push(req.body.userId)
-    console.log(userCollection)
     userCollection.updateOne({_id: req.user._id},{$set: {friends:ObjectId(req.body.userId)}}).then(() => {
         //res.status(200)
         //res.json('updated friends')
-        console.log(`user Id ${req.body.userId}`)
         userCollection.find({_id:req.body.userId}).exec().then((user) => {
-            console.log(`user:${user}`)
-            console.log(`friend ${user.friends}`)
             if (user.friends) {
                 const friends2 = [user.friends]
                 friends2.push(req.user._id)
                 userCollection.updateOne({_id: req.body.userId},{$set: {friends:friends2}}).then(() => {
-                    console.log('successful')
                     res.status(200)
                     res.json('added friend')
                 }).catch(err => {
@@ -150,9 +143,7 @@ const addFriend = (req,res) => {
                 })
             } else {
                 const friends2 = [req.user._id]
-                console.log(friends2)
                 userCollection.updateOne({_id: req.body.userId},{$set: {friends:friends2}}).then(() => {
-                    console.log('successful')
                     res.status(200)
                     res.json('added friend')
                 }).catch(err => {
@@ -161,7 +152,6 @@ const addFriend = (req,res) => {
                 })
             }
         }).catch(err => {
-            console.log(`error ${err}`)
             res.status(400)
             res.json({error:err})
         })

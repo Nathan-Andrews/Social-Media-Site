@@ -10,7 +10,7 @@ import Friends from './friends'
 import FriendMessages from './FriendMessages'
 
 function createUser(signUp) {
-  return axios.post('http://localhost:1928/signup', signUp, {withCredentials:true});
+  return api.post('signup', signUp);
 };
 function loginUser(user) {
   return axios.post('http://localhost:1928/login', user, {withCredentials:true});
@@ -48,12 +48,10 @@ class App extends React.Component{
 
   componentDidMount(){
     validateUser().then((res) => {
-      //console.log(res.data)
       this.setState({
         user:res.data.user,
       })
       getUsers().then((res) => {
-        console.log(res.data.notFriends)
         this.setState({
           users:res.data.notFriends,
           friends:res.data.friends,
@@ -78,31 +76,26 @@ class App extends React.Component{
     this.setState({
       username:event.target.value,
     })
-    //console.log(this.state.username)
   }
   onEmailChange = (event) => {
     this.setState({
       email:event.target.value,
     })
-    //console.log(this.state.email)
   }
   onPasswordChange = (event) => {
     this.setState({
       password:event.target.value,
     })
-    //console.log(this.state.password)
   }
   onConfirmPasswordChange = (event) => {
     this.setState({
       confirmPassword:event.target.value,
     })
-    //console.log(this.state.confirmPassword)
   }
   onBioChange = (event) => {
     this.setState({
       description:event.target.value,
     })
-    //console.log(this.state.description)
   }
 
   register = () => {
@@ -123,7 +116,6 @@ class App extends React.Component{
         error:'password must include at least one capital letter, one lowercase letter, one number and one symbol'
       })
     } else {
-      console.log('signed up')
       createUser(signUp).then((res) => {
         this.setState({
           error:'',
@@ -140,21 +132,17 @@ class App extends React.Component{
   login = () => {
     const {email, password} = this.state;
     const login = {email, password}
-    console.log('login attempted')
     if (!email || !password) {
       this.setState({
         error:'all fields are required'
       })
     } else {
       loginUser(login).then((res) => {
-        console.log('success')
-        console.log(res.data)
         this.setState({
           error:'',
           user:res.data,
         })
       }).catch(
-        //console.log('failure'),
         this.setState({
           error:'incorrect credentials'
         })
@@ -163,20 +151,17 @@ class App extends React.Component{
   }
   logout = () => {
     logoutUser().then((res) => {
-      console.log(res.data)
       this.setState({
         error:null,
         user:null,
       })
     }).catch(err => {
-      console.log(err)
       this.setState({
         user:null
       })
     })
   }
   addFriend = (userId) => {
-    console.log(`added friend ${userId}`)
     addFriend({userId}).then((res) => {
       console.log(res.data)
     })
@@ -196,7 +181,7 @@ class App extends React.Component{
         <div>
           <Switch>
             <Route path="/signup">
-              <SignUp onUsernameChange={this.onUsernameChange} onEmailChange={this.onEmailChange} onPasswordChange={this.onPasswordChange} onConfirmPasswordChange={this.onConfirmPasswordChange} onBioChange={this.onBioChange} register={this.register} error={this.state.error}/>
+              <SignUp onUsernameChange={this.onUsernameChange} onEmailChange={this.onEmailChange} onPasswordChange={this.onPasswordChange} onConfirmPasswordChange={this.onConfirmPasswordChange} onBioChange={this.onBioChange} register={this.register} error={this.state.error} user={this.state.user}/>
             </Route>
             <Route path="/login">
               <Login onEmailChange={this.onEmailChange} onPasswordChange={this.onPasswordChange} login={this.login} error={this.state.error} user={this.state.user}/>

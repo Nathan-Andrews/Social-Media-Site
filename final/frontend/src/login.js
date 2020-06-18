@@ -5,7 +5,6 @@ import {Link,Redirect} from "react-router-dom";
 
 function Login (props) {
     if (props.user) {
-        //console.log(`user:${props.user}`)
         return (
             <Redirect to="/friends"/>
         )

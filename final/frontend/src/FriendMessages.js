@@ -9,7 +9,7 @@ const getMessages = (userId) => {
     return api.get(`messages/${userId}`)
 }
 function sendMessage(contents) {
-    return axios.post('http://localhost:1928/message', contents, {withCredentials:true})
+    return api.post('message', contents)
 }
 function isCorrectFriend(friends, userId) { 
     return friends._id === userId;
@@ -18,7 +18,6 @@ const send = (friends, userId, message) => {
     if (!message) {return Promise.resolve()}
     isCorrectFriend(friends, userId)
     const friend = friends.find((friend) => isCorrectFriend(friend, userId))
-    console.log(`sent ${message}`)
     return sendMessage({message:message,friend:friend._id}).then(res => {
         return res.data
     })
@@ -31,7 +30,6 @@ function FriendMessages (props) {
     useEffect(() => {
         if (messages) {return}
         getMessages(userId).then((res) => {
-            console.log(res.data.messages)
             if (!res.data) {return}
             setMessages(res.data.messages)
         }).catch(err => {
@@ -39,7 +37,6 @@ function FriendMessages (props) {
         })
     });
     if (!props.user) {
-        console.log(`user:${props.user}`)
         return (
             <Redirect to="/login"/>
         )
@@ -58,27 +55,18 @@ function FriendMessages (props) {
 
     function MessageListItem(props) {
         const {userId, message} = props;
-        console.log(message.body)
-        console.log(message.sender)
         const color = message.sender === userId ? USER_SENDER_COLOR : USER_RECIPIENT_COLOR
         return <div style={{background: color, margin:'10px'}}>{message.body}</div>
     }
 
     function MessageList(props) {
         const {userId, messages2} = props;
-        console.log(messages2)
-        console.log(userId)
         if (messages2.length === 0) {return null}
         return (
     <ul>{messages2.messages.map((message) => <MessageListItem message={message} userId={userId} key={message.dateSent}/>)}</ul>
         );
     }
 
-    //console.log(userId)
-    //console.log(props.friends)
-    //console.log({messages})
-    console.log(messages)
-    console.log(props.message)
     return(
         <div>
             <div className="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
@@ -96,7 +84,6 @@ function FriendMessages (props) {
                     <textarea placeholder="message" onChange={(event) => {setMessage(event.target.value)}} value={message}></textarea>
                     <button className="btn btn-primary" onClick={() => {send(props.friends, userId, message).then(newMessage=> {
                         setMessage('')
-                        console.log(newMessage)
                         setMessages({...messages, messages: [...messages.messages, newMessage.message]})
                         })}}>send</button>
                 </div>
