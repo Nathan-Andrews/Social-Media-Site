@@ -124,33 +124,22 @@ const addFriend = (req,res) => {
         res.status(400)
         res.json({error:"no cookie found"})
     }
-    const friends = [req.user.friends]
+    const friends = req.user.friends || []
     //const userCollection=db.collection('users')
-    friends.push(req.body.userId)
-    userCollection.updateOne({_id: req.user._id},{$set: {friends:ObjectId(req.body.userId)}}).then(() => {
+    friends.push(ObjectId(req.body.userId))
+    userCollection.updateOne({_id: req.user._id},{$set: {friends}}).then(() => {
         //res.status(200)
         //res.json('updated friends')
         userCollection.find({_id:req.body.userId}).exec().then((user) => {
-            if (user.friends) {
-                const friends2 = [user.friends]
-                friends2.push(req.user._id)
-                userCollection.updateOne({_id: req.body.userId},{$set: {friends:friends2}}).then(() => {
-                    res.status(200)
-                    res.json('added friend')
-                }).catch(err => {
-                    res.status(400)
-                    res.json({error:err})
-                })
-            } else {
-                const friends2 = [req.user._id]
-                userCollection.updateOne({_id: req.body.userId},{$set: {friends:friends2}}).then(() => {
-                    res.status(200)
-                    res.json('added friend')
-                }).catch(err => {
-                    res.status(400)
-                    res.json({error:err})
-                })
-            }
+            const friends2 = user.friends || []
+            friends2.push(req.user._id)
+            userCollection.updateOne({_id: req.body.userId},{$set: {friends:friends2}}).then(() => {
+                res.status(200)
+                res.json('added friend')
+            }).catch(err => {
+                res.status(400)
+                res.json({error:err})
+            })
         }).catch(err => {
             res.status(400)
             res.json({error:err})

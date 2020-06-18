@@ -13,37 +13,37 @@ function createUser(signUp) {
   return api.post('signup', signUp);
 };
 function loginUser(user) {
-  return axios.post('http://localhost:1928/login', user, {withCredentials:true});
+  return api.post('login', user);
 };
 function validateUser() {
-  return axios.get('http://localhost:1928/loggedInUser', {withCredentials:true})
+  return api.get('loggedInUser')
 }
 function logoutUser() {
-  return axios.get('http://localhost:1928/logout', {withCredentials:true})
+  return api.get('logout')
 }
 function getUsers() {
-  return axios.get('http://localhost:1928/users', {withCredentials:true})
+  return api.get('users')
 }
 function addFriend(friend) {
-  return axios.post('http://localhost:1928/addFriend', friend, {withCredentials:true})
+  return api.post('addFriend', friend)
 }
-
+const DEFAULT_STATE = {
+  username:'',
+  email:'',
+  password:'',
+  confirmPassword:'',
+  description:'',
+  error:'',
+  signUp:{},
+  user: null,
+  isLoaded: false,
+  users: null,
+  friends: null,
+}
 class App extends React.Component{
   constructor(){
     super()
-    this.state = {
-      username:'',
-      email:'',
-      password:'',
-      confirmPassword:'',
-      description:'',
-      error:'',
-      signUp:{},
-      user: null,
-      isLoaded: false,
-      users: null,
-      friends: null,
-    }
+    this.state = DEFAULT_STATE
   }
 
   componentDidMount(){
@@ -151,10 +151,7 @@ class App extends React.Component{
   }
   logout = () => {
     logoutUser().then((res) => {
-      this.setState({
-        error:null,
-        user:null,
-      })
+      this.setState(DEFAULT_STATE)
     }).catch(err => {
       this.setState({
         user:null

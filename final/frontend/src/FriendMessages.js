@@ -30,8 +30,8 @@ function FriendMessages (props) {
     useEffect(() => {
         if (messages) {return}
         getMessages(userId).then((res) => {
-            if (!res.data) {return}
-            setMessages(res.data.messages)
+            console.log(res.data)
+            setMessages(res.data.messages || [])
         }).catch(err => {
             console.log(err)
         })
@@ -84,7 +84,7 @@ function FriendMessages (props) {
                     <textarea placeholder="message" onChange={(event) => {setMessage(event.target.value)}} value={message}></textarea>
                     <button className="btn btn-primary" onClick={() => {send(props.friends, userId, message).then(newMessage=> {
                         setMessage('')
-                        setMessages({...messages, messages: [...messages.messages, newMessage.message]})
+                        setMessages({...messages, messages: [...(messages.messages || []), newMessage.message]})
                         })}}>send</button>
                 </div>
             </div>
